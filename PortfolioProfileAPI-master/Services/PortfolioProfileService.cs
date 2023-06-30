@@ -1,4 +1,5 @@
-﻿using PortfolioAPI.Models;
+﻿using PortfolioAPI.Exceptions;
+using PortfolioAPI.Models;
 using PortfolioAPI.Repository;
 
 namespace PortfolioAPI.Services
@@ -12,21 +13,54 @@ namespace PortfolioAPI.Services
             _portfolioProfileRepository = portfolioProfileRepository;
         }
 
-        public async Task<IEnumerable<PortfolioProfile>> GetPortfolioProfiles()
+        public async Task<IEnumerable<PortfolioProfile>> GetPortfolioProfiles(string username)
         {
-            var portfolios=await _portfolioProfileRepository.GetPortfolioProfiles();
+            var portfolios=await _portfolioProfileRepository.GetPortfolioProfiles(username);
+            if (portfolios == null)
+            {
+                throw new PortfolioProfileNotFoundException("No Portfolios Created");
+            }
             return portfolios;
 
         }
 
         public async Task<PortfolioProfile> GetPortfolioProfile(int portfolioId)
         {
-            return await _portfolioProfileRepository.GetPortfolioProfile(portfolioId);
+
+            var pp=await _portfolioProfileRepository.GetPortfolioProfile(portfolioId);
+            if (pp == null)
+            {
+                throw new PortfolioProfileNotFoundException("No Portfolio Found");
+            }
+            return pp;
         }
 
-        public async Task CreatePortfolioProfile(PortfolioProfile portfolioProfile)
+        public async Task<PortfolioProfile> CreatePortfolioProfile(PortfolioProfile portfolioProfile)
         {
-            await _portfolioProfileRepository.CreatePortfolioProfile(portfolioProfile);
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync($"https://localhost:7270/api/User/users/exists?username={portfolioProfile.UserName}");
+                if (response.IsSuccessStatusCode)
+                {
+                    string jsonresponse = await response.Content.ReadAsStringAsync();
+                    bool status = Boolean.Parse(jsonresponse);
+                    if (status)
+                    {
+                         var pp=await _portfolioProfileRepository.CreatePortfolioProfile(portfolioProfile);
+                        return pp;
+                    }
+                    else
+                    {
+                        throw new UserDoesNotExistException("User Does Not Exist..");
+                    }
+
+                }
+                else
+                {
+                    // Handle error response
+                    throw new Exception();
+                }
+            }
         }
 
         public async Task UpdatePortfolioProfile(int id,PortfolioProfile portfolioProfile)

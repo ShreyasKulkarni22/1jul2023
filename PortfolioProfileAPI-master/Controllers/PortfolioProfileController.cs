@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using PortfolioAPI.Exceptions;
 using PortfolioAPI.Models;
 using PortfolioAPI.Services;
 
@@ -17,28 +18,53 @@ namespace PortfolioAPI.Controllers
         }
 
         [HttpGet("Portfolios")]
-        public async Task<ActionResult<IEnumerable<PortfolioProfile>>> GetPortfolioProfiles()
+        public async Task<ActionResult<IEnumerable<PortfolioProfile>>> GetPortfolioProfiles(string username)
         {
-            var portfolioProfiles =await  _portfolioProfileService.GetPortfolioProfiles();
-            return Ok(portfolioProfiles);
+            try
+            {
+                var portfolioProfiles = await _portfolioProfileService.GetPortfolioProfiles(username);
+                return Ok(portfolioProfiles);
+            }
+            catch (PortfolioProfileNotFoundException ex)
+            {
+
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpGet("Portfolios/{id}")]
         public async Task<ActionResult<PortfolioProfile>> GetPortfolioProfile(int id)
         {
-            var portfolioProfile = await _portfolioProfileService.GetPortfolioProfile(id);
-            if (portfolioProfile == null)
+            try
             {
-                return NotFound();
+                var portfolioProfile = await _portfolioProfileService.GetPortfolioProfile(id);
+                
+                return Ok(portfolioProfile);
             }
-            return Ok(portfolioProfile);
+            catch (PortfolioProfileNotFoundException ex)
+            {
+
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPost]
         public async Task<ActionResult<PortfolioProfile>> CreatePortfolioProfile(PortfolioProfile portfolioProfile)
         {
-            await _portfolioProfileService.CreatePortfolioProfile(portfolioProfile);
-            return CreatedAtAction(nameof(GetPortfolioProfile), new { id = portfolioProfile.PortfolioId }, portfolioProfile);
+            try
+            {
+                await _portfolioProfileService.CreatePortfolioProfile(portfolioProfile);
+                return CreatedAtAction(nameof(GetPortfolioProfile), new { id = portfolioProfile.PortfolioId }, portfolioProfile);
+            }
+            catch(UserDoesNotExistException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+
+                return NotFound(ex.Message);
+            }
         }
 
         [HttpPut("Portfolios/{id}")]

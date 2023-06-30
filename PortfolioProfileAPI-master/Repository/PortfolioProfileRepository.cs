@@ -13,10 +13,11 @@ namespace PortfolioAPI.Repository
             _dbContext = dbContext;
         }
 
-        public async Task<IEnumerable<PortfolioProfile>> GetPortfolioProfiles()
+        public async Task<IEnumerable<PortfolioProfile>> GetPortfolioProfiles(string username)
         {
             var portfolios = await _dbContext.PortfolioProfiles.ToListAsync();
-            return portfolios;
+            var pp =portfolios.Where(p=>p.UserName == username);
+            return pp;
         }
 
         public async Task<PortfolioProfile> GetPortfolioProfile(int portfolioId)
@@ -25,10 +26,11 @@ namespace PortfolioAPI.Repository
             return portfolio;
         }
 
-        public async Task CreatePortfolioProfile(PortfolioProfile portfolioProfile)
+        public async Task<PortfolioProfile> CreatePortfolioProfile(PortfolioProfile portfolioProfile)
         {
-            await _dbContext.PortfolioProfiles.AddAsync(portfolioProfile);
+            var pp=await _dbContext.PortfolioProfiles.AddAsync(portfolioProfile);
             await _dbContext.SaveChangesAsync();
+            return pp.Entity;
         }
 
         public async Task UpdatePortfolioProfile(int id,PortfolioProfile portfolioProfile)

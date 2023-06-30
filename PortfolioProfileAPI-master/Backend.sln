@@ -5,7 +5,9 @@ VisualStudioVersion = 17.6.33801.468
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PortfolioAPI", "PortfolioAPI.csproj", "{D6CDB166-0D89-4216-9308-AF41857DF0A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockAPI", "..\StockAPI\StockAPI.csproj", "{B4BE8CB3-F905-4CF2-9250-D58641CEE503}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StockAPI", "..\StockAPI\StockAPI.csproj", "{B4BE8CB3-F905-4CF2-9250-D58641CEE503}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AngularAuthAPI", "..\AngularAuthAPI\AngularAuthAPI.csproj", "{5DDFFE38-5840-47ED-B00C-02213FEF7036}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{B4BE8CB3-F905-4CF2-9250-D58641CEE503}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B4BE8CB3-F905-4CF2-9250-D58641CEE503}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B4BE8CB3-F905-4CF2-9250-D58641CEE503}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DDFFE38-5840-47ED-B00C-02213FEF7036}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DDFFE38-5840-47ED-B00C-02213FEF7036}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DDFFE38-5840-47ED-B00C-02213FEF7036}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DDFFE38-5840-47ED-B00C-02213FEF7036}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
